@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lp o único • Oficial Hub</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --accent-primary: #3b82f6;
+            --accent-secondary: #8b5cf6;
+            --accent-tertiary: #f59e0b;
+            --accent-rgb: 59, 130, 246;
+            --accent-sec-rgb: 139, 92, 246;
+        }
+
+        body {
+            background-color: #07080d;
+            color: #f8fafc;
+            overflow-x: hidden;
+            transition: background-color 0.35s ease, color 0.35s ease;
+        }
+
+        body.light-theme {
+            background-color: #f1f5f9;
+            color: #0f172a;
+        }
+
+        /* Theme Wallpaper Layer */
+        #gtaWallpaperLayer {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.45s ease, transform 0.6s ease;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transform: scale(1.04);
+        }
+
+        #gtaWallpaperLayer.active {
+            opacity: 0.34;
+            transform: scale(1);
+        }
+
+        body.light-theme #gtaWallpaperLayer.active {
+            opacity: 0.22;
+        }
+
+        #gtaWallpaperScrim {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background: radial-gradient(circle at top, rgba(var(--accent-rgb), 0.14), transparent 55%),
+                        linear-gradient(to bottom, rgba(7, 8, 13, 0.68), rgba(7, 8, 13, 0.92));
+            transition: background 0.35s ease;
+        }
+
+        body.light-theme #gtaWallpaperScrim {
+            background: radial-gradient(circle at top, rgba(var(--accent-rgb), 0.14), transparent 55%),
+                        linear-gradient(to bottom, rgba(241, 245, 249, 0.72), rgba(241, 245, 249, 0.92));
+        }
+
+        /* Animated Background Orbs */
+        @keyframes floatBlob {
+            0%, 100% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -40px) scale(1.08); }
+            66% { transform: translate(-25px, 25px) scale(0.95); }
+        }
+
+        .blob-1 {
+            animation: floatBlob 14s infinite ease-in-out;
+            background-color: rgba(var(--accent-sec-rgb), 0.22);
+        }
+        .blob-2 {
+            animation: floatBlob 18s infinite ease-in-out reverse;
+            background-color: rgba(var(--accent-rgb), 0.22);
+        }
+        .blob-3 {
+            animation: floatBlob 22s infinite ease-in-out;
+            background-color: rgba(245, 158, 11, 0.12);
+        }
+
+        /* Glass Card Styling */
+        .glass-card {
+            background: rgba(18, 21, 34, 0.66);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        body.light-theme .glass-card {
+            background: rgba(255, 255, 255, 0.76);
+            border: 1px solid rgba(15, 23, 42, 0.1);
+            color: #0f172a;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(var(--accent-rgb), 0.55);
+            box-shadow: 0 12px 32px -8px rgba(var(--accent-rgb), 0.28), 0 0 15px rgba(var(--accent-sec-rgb), 0.18);
+            background: rgba(24, 28, 45, 0.82);
+        }
+
+        body.light-theme .glass-card:hover {
+            background: rgba(255, 255, 255, 0.94);
+        }
+
+        /* Dynamic Accent Ring for Avatar */
+        .avatar-ring {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
+            padding: 3px;
+        }
+
+        .accent-btn {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+        }
+
+        .accent-text {
+            color: var(--accent-primary);
+        }
+
+        .accent-border {
+            border-color: rgba(var(--accent-rgb), 0.45);
+        }
+
+        /* Audio Equalizer Bars Animation */
+        @keyframes eqBar {
+            0%, 100% { height: 25%; }
+            50% { height: 100%; }
+        }
+        .eq-playing .bar-1 { animation: eqBar 0.7s infinite ease-in-out; }
+        .eq-playing .bar-2 { animation: eqBar 0.5s infinite ease-in-out 0.15s; }
+        .eq-playing .bar-3 { animation: eqBar 0.8s infinite ease-in-out 0.3s; }
+        .eq-playing .bar-4 { animation: eqBar 0.6s infinite ease-in-out 0.1s; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(var(--accent-rgb), 0.45);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-primary);
+        }
+    </style>
+</head>
+<body class="min-h-screen relative selection:bg-blue-500/30">
+
+    <!-- Theme Wallpaper & Scrim -->
+    <div id="gtaWallpaperLayer"></div>
+    <div id="gtaWallpaperScrim"></div>
+
+    <!-- Ambient Animated Background -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="blob-1 absolute -top-24 -left-24 w-80 h-80 sm:w-96 sm:h-96 rounded-full blur-[110px]"></div>
+        <div class="blob-2 absolute top-1/3 -right-24 w-80 h-80 sm:w-[28rem] sm:h-[28rem] rounded-full blur-[120px]"></div>
+        <div class="blob-3 absolute -bottom-24 left-1/4 w-72 h-72 sm:w-96 sm:h-96 rounded-full blur-[110px]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:36px_36px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_85%)]"></div>
+    </div>
+
+    <!-- Top Floating Utility Bar (Customization Trigger + Live Clock) -->
+    <header class="relative z-20 max-w-2xl mx-auto px-4 pt-5 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-2 flex-wrap">
+            <div id="activeStyleBadge" class="glass-card px-3.5 py-1.5 rounded-full text-xs font-medium flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full" style="background-color: var(--accent-primary);"></span>
+                <span id="activeStyleLabel">Tema Escuro • Azul Neon</span>
+            </div>
+
+            <div id="liveClockBadge" class="glass-card px-3 py-1.5 rounded-full text-xs font-mono font-semibold flex items-center gap-1.5" title="Hora em tempo real">
+                <i data-lucide="clock" class="w-3.5 h-3.5 accent-text"></i>
+                <span id="liveClockText">00:00:00</span>
+            </div>
+        </div>
+
+        <button id="openCustomBtn" type="button" class="glass-card px-3.5 py-2 rounded-full text-xs font-semibold flex items-center gap-2 hover:scale-[1.02] active:scale-95">
+            <i data-lucide="palette" class="w-4 h-4 accent-text"></i>
+            <span>Personalizar Tema & Cor</span>
+        </button>
+    </header>
+
+    <!-- Main Container -->
+    <main class="relative z-10 max-w-2xl mx-auto px-4 pt-4 pb-20 space-y-7">
+
+        <!-- 1) PROFILE HEADER SECTION -->
+        <section class="text-center flex flex-col items-center">
+            <div class="relative group mb-4">
+                <div class="avatar-ring rounded-full shadow-lg">
+                    <div class="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden bg-slate-900 relative">
+                        <img id="profileAvatar" src="lp_ofc.088.jpeg" alt="Lp o único" onerror="this.src='https://placehold.co/300x300/111420/3b82f6?text=LP'" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                    </div>
+                </div>
+                <span id="avatarStatusDot" class="absolute bottom-1.5 right-1.5 w-5 h-5 rounded-full bg-red-500 border-4 border-[#07080d] animate-pulse" title="Online"></span>
+            </div>
+
+            <div class="flex items-center justify-center gap-2 mb-1.5">
+                <h1 id="profileName" class="font-display text-2xl sm:text-3xl font-extrabold tracking-tight">
+                    Lp o único
+                </h1>
+                <span class="inline-flex items-center justify-center text-blue-400 drop-shadow-[0_0_8px_rgba(59,130,246,0.7)]" title="Perfil Oficial Verificado">
+                    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                        <path d="M22.5 12.5c0-1.58-.875-2.95-2.148-3.6.154-.435.238-.905.238-1.4 0-2.21-1.71-3.998-3.818-3.998-.47 0-.92.084-1.336.25C14.818 2.415 13.51 1.5 12 1.5s-2.816.917-3.437 2.25c-.415-.165-.866-.25-1.336-.25-2.11 0-3.818 1.79-3.818 4 0 .494.083.964.237 1.4-1.272.65-2.147 2.018-2.147 3.6 0 1.495.782 2.798 1.942 3.486-.02.17-.032.34-.032.514 0 2.21 1.708 4 3.818 4 .47 0 .92-.086 1.335-.25.62 1.334 1.926 2.25 3.437 2.25 1.512 0 2.818-.916 3.437-2.25.415.163.865.248 1.336.248 2.11 0 3.818-1.79 3.818-4 0-.174-.012-.344-.033-.513 1.158-.687 1.943-1.99 1.943-3.484zm-6.616-3.334l-4.334 6.5c-.145.217-.382.334-.625.334-.143 0-.288-.04-.416-.126l-.115-.094-2.415-2.415c-.293-.293-.293-.768 0-1.06s.768-.294 1.06 0l1.77 1.767 3.825-5.74c.23-.345.696-.436 1.04-.207.346.23.44.696.21 1.04z"/>
+                    </svg>
+                </span>
+            </div>
+
+            <p id="profileBio" class="text-sm sm:text-base opacity-85 max-w-md leading-relaxed mb-5">
+                Criador de Conteúdo • Gamer • Música & Entretenimento
+            </p>
+
+            <div id="socialBar" class="flex flex-wrap items-center justify-center gap-2.5"></div>
+        </section>
+
+        <!-- 2) FEATURED LIVE / LATEST VIDEO CARDS -->
+        <section id="featuredSection" class="space-y-4">
+            <!-- Card 1: YouTube -->
+            <a id="featuredLink" href="https://youtube.com/@lp_ofc.088?si=nrqzlGfLKn66Q1CH" target="_blank" rel="noopener noreferrer" class="block glass-card rounded-3xl overflow-hidden group relative accent-border">
+                <div class="relative aspect-video w-full overflow-hidden bg-slate-900">
+                    <img id="featuredThumb" src="ounico.jpeg" alt="Destaque Lp TV On" onerror="this.src='https://placehold.co/800x450/111420/3b82f6?text=Lp+TV+On+Destaque'" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-85">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent"></div>
+
+                    <div class="absolute top-3.5 left-3.5 flex items-center gap-2">
+                        <span id="liveBadgeContainer" class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-red-600/90 text-white shadow-lg shadow-red-600/40 backdrop-blur-md">
+                            <span class="relative flex h-2.5 w-2.5">
+                                <span id="livePingDot" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
+                            </span>
+                            <span id="liveBadgeText">AO VIVO AGORA</span>
+                        </span>
+                    </div>
+
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white/15 backdrop-blur-md border border-white/30 flex items-center justify-center text-white transition-all duration-300 group-hover:scale-110 accent-btn shadow-2xl">
+                            <i data-lucide="play" class="w-6 h-6 fill-current ml-0.5"></i>
+                        </div>
+                    </div>
+
+                    <div class="absolute bottom-3.5 left-4 right-4 flex items-end justify-between gap-3">
+                        <div>
+                            <p id="featuredSubtitle" class="text-xs font-semibold uppercase tracking-wider text-amber-400 mb-0.5">Lp TV On • YouTube</p>
+                            <h2 id="featuredTitle" class="font-display text-base sm:text-lg font-bold text-white line-clamp-1">
+                                Gameplay Insana & Resenha com a Tropa! Cola na Live 🔥
+                            </h2>
+                        </div>
+                        <span class="shrink-0 p-2 rounded-xl bg-white/10 text-white transition-colors">
+                            <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                        </span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Card 2: Mesmo estilo -> Vai para o Instagram com botão de play na bola azul -->
+            <a id="instagramFeaturedLink" href="https://www.instagram.com/lp_ofc.088?bqrl=ajA0NjFvbGZhdmI2" target="_blank" rel="noopener noreferrer" class="block glass-card rounded-3xl overflow-hidden group relative accent-border">
+                <div class="relative aspect-video w-full overflow-hidden bg-slate-900">
+                    <img id="instagramFeaturedThumb" src="lp_ofc.088.jpeg" alt="Destaque Instagram @lp_ofc.088" onerror="this.src='https://placehold.co/800x450/111420/3b82f6?text=Instagram+%40lp_ofc.088'" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-85">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent"></div>
+
+                    <div class="absolute top-3.5 left-3.5 flex items-center gap-2">
+                        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold tracking-wider uppercase bg-blue-600/90 text-white shadow-lg shadow-blue-600/40 backdrop-blur-md">
+                            <span class="relative flex h-2.5 w-2.5">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
+                            </span>
+                            <span>AO VIVO</span>
+                        </span>
+                    </div>
+
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-blue-600/90 backdrop-blur-md border border-blue-300/40 flex items-center justify-center text-white transition-all duration-300 group-hover:scale-110 shadow-2xl shadow-blue-600/50">
+                            <i data-lucide="play" class="w-6 h-6 fill-current ml-0.5"></i>
+                        </div>
+                    </div>
+
+                    <div class="absolute bottom-3.5 left-4 right-4 flex items-end justify-between gap-3">
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-wider text-amber-400 mb-0.5">Lp TV On • Instagram</p>
+                            <h2 class="font-display text-base sm:text-lg font-bold text-white line-clamp-1">
+                                Gameplay Insana & Resenha com a Tropa! Cola no Insta 🔥
+                            </h2>
+                        </div>
+                        <span class="shrink-0 p-2 rounded-xl bg-white/10 text-white transition-colors">
+                            <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                        </span>
+                    </div>
+                </div>
+            </a>
+        </section>
+
+        <!-- 3) MAIN INTERACTIVE LINKS GRID -->
+        <section class="space-y-3">
+            <div class="flex items-center justify-between px-1">
+                <h3 class="text-xs font-bold uppercase tracking-widest opacity-70 flex items-center gap-2">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
+                    Links & Comunidade
+                </h3>
+                <span class="text-[11px] opacity-60">Toque para acessar</span>
+            </div>
+
+            <div id="linksGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
+        </section>
+
+        <!-- 4) AUTOPLAY MUSIC PLAYER WITH PAUSE / UNPAUSE -->
+        <section id="musicSection" class="space-y-3.5">
+            <div class="flex items-center justify-between px-1">
+                <h3 class="text-xs font-bold uppercase tracking-widest opacity-70 flex items-center gap-2">
+                    <i data-lucide="volume-2" class="w-3.5 h-3.5 accent-text"></i>
+                    Som do Site
+                </h3>
+                <span id="musicStatusBadge" class="text-[11px] accent-text font-medium">Autoplay ao entrar</span>
+            </div>
+
+            <div id="musicPlayerCard" class="glass-card p-4 rounded-2xl flex items-center justify-between gap-4 accent-border">
+                <div class="flex items-center gap-3.5 min-w-0">
+                    <div class="relative w-14 h-14 rounded-xl overflow-hidden shrink-0 bg-slate-900">
+                        <img id="trackCover" src="ounico.jpeg" alt="Música do site" onerror="this.src='https://placehold.co/150x150/111420/3b82f6?text=LP'" class="w-full h-full object-cover">
+                    </div>
+
+                    <div class="min-w-0">
+                        <p id="trackStateText" class="text-[11px] font-semibold uppercase tracking-wider accent-text truncate">
+                            Iniciando automaticamente...
+                        </p>
+                        <h4 id="trackTitleText" class="font-display font-bold text-sm sm:text-base truncate">
+                            Música do Site
+                        </h4>
+                        <p id="trackHintText" class="text-xs opacity-70 truncate">
+                            Arquivo: musica-nova.mp3
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 shrink-0">
+                    <div id="eqBars" class="flex items-end gap-0.5 h-5 w-5 opacity-30">
+                        <span class="bar-1 w-1 rounded-full h-1/3" style="background-color: var(--accent-primary);"></span>
+                        <span class="bar-2 w-1 rounded-full h-2/3" style="background-color: var(--accent-secondary);"></span>
+                        <span class="bar-3 w-1 rounded-full h-1/2" style="background-color: var(--accent-tertiary);"></span>
+                        <span class="bar-4 w-1 rounded-full h-3/4" style="background-color: var(--accent-primary);"></span>
+                    </div>
+
+                    <button id="togglePauseBtn" type="button" onclick="toggleSiteAudio()"
+                            class="px-4 py-2.5 rounded-xl accent-btn text-white text-xs font-bold flex items-center gap-2 shadow-lg hover:scale-[1.03] active:scale-95 transition-transform">
+                        <i id="pauseBtnIcon" data-lucide="pause" class="w-4 h-4 fill-current"></i>
+                        <span id="pauseBtnLabel">Pausar</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="pt-6 text-center space-y-2 border-t border-white/10">
+            <p class="text-xs opacity-80">
+                © <span id="currentYear"></span> <strong class="font-semibold">Lp o único</strong>. Todos os direitos reservados.
+            </p>
+            <p class="text-[11px] opacity-60">
+                Creator Hub Oficial • Feito para a comunidade
+            </p>
+        </footer>
+    </main>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toastBox" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 translate-y-4 transition-all duration-300">
+        <div class="glass-card px-4 py-2.5 rounded-2xl accent-border shadow-xl flex items-center gap-2.5 text-sm font-medium">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+            <span id="toastMessage">Tema atualizado!</span>
+        </div>
+    </div>
+
+    <!-- CUSTOMIZATION MODAL (PUBLIC THEME, COLOR & WALLPAPERS) -->
+    <div id="customModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+        <div class="glass-card w-full max-w-lg max-h-[90vh] rounded-3xl flex flex-col overflow-hidden shadow-2xl">
+            <div class="px-5 py-4 border-b border-white/10 flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="p-2 rounded-xl bg-white/10 accent-text">
+                        <i data-lucide="palette" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-display font-bold text-base">Personalizar Aparência</h2>
+                        <p class="text-xs opacity-70">Escolha o modo, cor principal e imagem de fundo</p>
+                    </div>
+                </div>
+                <button id="closeCustomBtn" type="button" class="p-2 rounded-xl opacity-70 hover:opacity-100 hover:bg-white/10">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="p-5 overflow-y-auto space-y-6">
+                <!-- Modo Claro / Escuro -->
+                <div class="space-y-2.5">
+                    <label class="text-xs font-bold uppercase tracking-wider opacity-70 block">Modo do Site</label>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <button type="button" data-mode="dark" class="mode-btn p-3 rounded-2xl border border-white/10 flex items-center justify-center gap-2 text-xs font-bold transition-all">
+                            <i data-lucide="moon" class="w-4 h-4"></i>
+                            <span>Modo Escuro</span>
+                        </button>
+                        <button type="button" data-mode="light" class="mode-btn p-3 rounded-2xl border border-white/10 flex items-center justify-center gap-2 text-xs font-bold transition-all">
+                            <i data-lucide="sun" class="w-4 h-4"></i>
+                            <span>Modo Claro</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Cores do Site -->
+                <div class="space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <label class="text-xs font-bold uppercase tracking-wider opacity-70">Cor Principal do Site</label>
+                        <input id="customColorPicker" type="color" value="#3b82f6" title="Cor personalizada" class="w-8 h-8 rounded-lg cursor-pointer bg-transparent border-0">
+                    </div>
+                    <div id="colorSwatches" class="grid grid-cols-3 sm:grid-cols-6 gap-2"></div>
+                </div>
+
+                <!-- Imagens de Tema (Jason / Lucia / lp-ofcc / Padrão) -->
+                <div class="space-y-2.5">
+                    <label class="text-xs font-bold uppercase tracking-wider opacity-70 block">Imagem de Fundo • Temas</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <button type="button" data-gta="jason" class="gta-card group text-left rounded-2xl overflow-hidden border border-white/10 transition-all">
+                            <div class="aspect-video w-full overflow-hidden bg-slate-900 relative">
+                                <img id="previewGtaJason" src="jason.jpeg" alt="jason" onerror="this.src='https://placehold.co/400x225/111420/3b82f6?text=jason'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                <span class="absolute bottom-1.5 left-1.5 px-2 py-0.5 rounded-md bg-blue-600/90 text-[10px] font-bold text-white uppercase">jason</span>
+                            </div>
+                            <div class="p-2.5">
+                                <p class="text-xs font-bold">jason</p>
+                                <p class="text-[11px] opacity-65">Tema jason</p>
+                            </div>
+                        </button>
+
+                        <button type="button" data-gta="lucia" class="gta-card group text-left rounded-2xl overflow-hidden border border-white/10 transition-all">
+                            <div class="aspect-video w-full overflow-hidden bg-slate-900 relative">
+                                <img id="previewGtaLucia" src="lucia.jpeg" alt="lucia" onerror="this.src='https://placehold.co/400x225/111420/ec4899?text=lucia'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                <span class="absolute bottom-1.5 left-1.5 px-2 py-0.5 rounded-md bg-pink-600/90 text-[10px] font-bold text-white uppercase">lucia</span>
+                            </div>
+                            <div class="p-2.5">
+                                <p class="text-xs font-bold">lucia</p>
+                                <p class="text-[11px] opacity-65">Tema lucia</p>
+                            </div>
+                        </button>
+
+                        <button type="button" data-gta="lp-ofcc" class="gta-card group text-left rounded-2xl overflow-hidden border border-white/10 transition-all">
+                            <div class="aspect-video w-full overflow-hidden bg-slate-900 relative">
+                                <img id="previewLpOfcc" src="lp_ofc.088.jpeg" alt="lp-ofcc" onerror="this.src='https://placehold.co/400x225/111420/8b5cf6?text=lp-ofcc'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                <span class="absolute bottom-1.5 left-1.5 px-2 py-0.5 rounded-md bg-violet-600/90 text-[10px] font-bold text-white uppercase">lp-ofcc</span>
+                            </div>
+                            <div class="p-2.5">
+                                <p class="text-xs font-bold">lp-ofcc</p>
+                                <p class="text-[11px] opacity-65">Tema lp-ofcc</p>
+                            </div>
+                        </button>
+
+                        <button type="button" data-gta="none" class="gta-card group text-left rounded-2xl overflow-hidden border border-white/10 transition-all flex flex-col justify-between">
+                            <div class="aspect-video w-full bg-slate-900/80 flex items-center justify-center opacity-75">
+                                <i data-lucide="sparkles" class="w-6 h-6 accent-text"></i>
+                            </div>
+                            <div class="p-2.5">
+                                <p class="text-xs font-bold">Padrão Hub</p>
+                                <p class="text-[11px] opacity-65">Somente luzes e cor</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-5 py-3.5 border-t border-white/10 flex items-center justify-between gap-3">
+                <button id="resetThemeBtn" type="button" class="px-3 py-2 rounded-xl text-xs font-semibold opacity-75 hover:opacity-100 hover:bg-white/10">
+                    Resetar Padrão
+                </button>
+                <button id="doneCustomBtn" type="button" class="px-5 py-2.5 rounded-xl accent-btn text-white text-xs font-bold shadow-lg">
+                    Salvar e Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. THEME, COLOR & WALLPAPER ASSETS
+        // ==========================================
+        const PREFS_KEY = 'lp_o_unico_user_theme_v1';
+
+        const GTA_THEMES = {
+            jason: 'jason.jpeg',
+            lucia: 'lucia.jpeg',
+            'lp-ofcc': 'lp_ofc.088.jpeg'
+        };
+
+        const COLOR_PRESETS = [
+            { name: 'Azul Neon', hex: '#3b82f6', sec: '#8b5cf6' },
+            { name: 'Roxo Vice', hex: '#a855f7', sec: '#ec4899' },
+            { name: 'Rosa GTA', hex: '#ec4899', sec: '#f97316' },
+            { name: 'Ciano Miami', hex: '#06b6d4', sec: '#3b82f6' },
+            { name: 'Esmeralda', hex: '#10b981', sec: '#06b6d4' },
+            { name: 'Ouro', hex: '#f59e0b', sec: '#ef4444' }
+        ];
+
+        const DEFAULT_PREFS = {
+            mode: 'dark',
+            colorHex: '#3b82f6',
+            colorSec: '#8b5cf6',
+            colorName: 'Azul Neon',
+            gtaTheme: 'none'
+        };
+
+        // ==========================================
+        // 2. HUB DATA & AUTOPLAY SITE AUDIO
+        // ==========================================
+        const HUB_DATA = {
+            profile: {
+                name: 'Lp o único',
+                bio: 'Criador de Conteúdo • Gamer • Música & Entretenimento',
+                avatar: 'lp_ofc.088.jpeg',
+                isLive: true,
+                liveBadge: 'AO VIVO AGORA',
+                featuredSub: 'Lp TV On • YouTube',
+                featuredTitle: 'Gameplay Insana & Resenha com a Tropa! Cola na Live 🔥',
+                featuredUrl: 'https://youtube.com/@lp_ofc.088?si=nrqzlGfLKn66Q1CH',
+                featuredThumb: 'ounico.jpeg'
+            },
+            socials: [
+                { id: 'soc-1', label: 'lp_ofc.088', platform: 'youtube', url: 'https://youtube.com/@lp_ofc.088?si=nrqzlGfLKn66Q1CH', color: 'text-red-400' },
+                { id: 'soc-2', label: 'lp_ofc.088', platform: 'instagram', url: 'https://www.instagram.com/lp_ofc.088?bqrl=ajA0NjFvbGZhdmI2', color: 'text-pink-400' },
+                { id: 'soc-3', label: 'lp_ofc088', platform: 'tiktok', url: 'https://www.tiktok.com/@lp_ofc088?_r=1&_t=ZS-9BWenVtnnKm', color: 'text-cyan-400' }
+            ],
+            links: [
+                {
+                    id: 'lnk-1',
+                    title: 'Canal YouTube • lp_ofc.088',
+                    subtitle: 'Vídeos novos, lives e melhores momentos',
+                    url: 'https://youtube.com/@lp_ofc.088?si=nrqzlGfLKn66Q1CH',
+                    icon: 'youtube',
+                    badge: 'Destaque',
+                    accent: 'from-red-500/20 to-orange-500/10 border-red-500/30',
+                    iconColor: 'text-red-400',
+                    featured: true
+                },
+                {
+                    id: 'lnk-2',
+                    title: 'Instagram • @lp_ofc.088',
+                    subtitle: 'Bastidores, stories e novidades',
+                    url: 'https://www.instagram.com/lp_ofc.088?bqrl=ajA0NjFvbGZhdmI2',
+                    icon: 'flame',
+                    accent: 'from-pink-500/20 to-purple-500/10 border-pink-500/30',
+                    iconColor: 'text-pink-400',
+                    featured: false
+                },
+                {
+                    id: 'lnk-3',
+                    title: 'TikTok • @lp_ofc088',
+                    subtitle: 'Clipes rápidos, cortes e trends',
+                    url: 'https://www.tiktok.com/@lp_ofc088?_r=1&_t=ZS-9BWenVtnnKm',
+                    icon: 'music',
+                    accent: 'from-cyan-500/20 to-blue-500/10 border-cyan-500/30',
+                    iconColor: 'text-cyan-400',
+                    featured: false
+                },
+                {
+                    id: 'lnk-4',
+                    title: 'Som do Site',
+                    subtitle: 'Pausar ou despausar a música do site',
+                    url: '#musicSection',
+                    icon: 'volume-2',
+                    accent: 'from-purple-500/20 to-amber-500/10 border-purple-500/30',
+                    iconColor: 'text-purple-400',
+                    featured: false
+                }
+            ],
+            siteAudio: {
+                title: 'Música do Site',
+                audioFile: 'musica-nova.mp3',
+                cover: 'ounico.jpeg',
+                loop: true
+            }
+        };
+
+        let savedPrefs = loadPrefs();
+        let draftPrefs = { ...savedPrefs };
+        let userPausedManually = false;
+        const siteAudioPlayer = new Audio();
+        siteAudioPlayer.src = encodeURI(HUB_DATA.siteAudio.audioFile);
+        siteAudioPlayer.loop = HUB_DATA.siteAudio.loop;
+        siteAudioPlayer.preload = 'auto';
+
+        function updateLiveClock() {
+            const now = new Date();
+            const hh = String(now.getHours()).padStart(2, '0');
+            const mm = String(now.getMinutes()).padStart(2, '0');
+            const ss = String(now.getSeconds()).padStart(2, '0');
+            const el = document.getElementById('liveClockText');
+            if (el) el.textContent = `${hh}:${mm}:${ss}`;
+        }
+
+        function updateAudioUI(isPlaying, messageOverride) {
+            const stateText = document.getElementById('trackStateText');
+            const btnIcon = document.getElementById('pauseBtnIcon');
+            const btnLabel = document.getElementById('pauseBtnLabel');
+            const eqBars = document.getElementById('eqBars');
+
+            if (messageOverride) {
+                stateText.textContent = messageOverride;
+            } else if (isPlaying) {
+                stateText.textContent = 'Tocando automaticamente';
+            } else if (userPausedManually) {
+                stateText.textContent = 'Pausado';
+            } else {
+                stateText.textContent = 'Toque na tela ou em Despausar';
+            }
+
+            if (isPlaying) {
+                btnIcon.setAttribute('data-lucide', 'pause');
+                btnLabel.textContent = 'Pausar';
+                eqBars.classList.add('eq-playing');
+                eqBars.classList.remove('opacity-30');
+            } else {
+                btnIcon.setAttribute('data-lucide', 'play');
+                btnLabel.textContent = 'Despausar';
+                eqBars.classList.remove('eq-playing');
+                eqBars.classList.add('opacity-30');
+            }
+            lucide.createIcons();
+        }
+
+        function attemptAutoplay() {
+            if (userPausedManually) return;
+            siteAudioPlayer.play().then(() => {
+                updateAudioUI(true);
+            }).catch(() => {
+                updateAudioUI(false);
+            });
+        }
+
+        function unlockOnFirstInteraction() {
+            if (userPausedManually) return;
+            if (siteAudioPlayer.paused) {
+                siteAudioPlayer.play().then(() => {
+                    updateAudioUI(true);
+                }).catch(() => {});
+            }
+            document.removeEventListener('click', unlockOnFirstInteraction);
+            document.removeEventListener('touchstart', unlockOnFirstInteraction);
+            document.removeEventListener('keydown', unlockOnFirstInteraction);
+        }
+
+        window.toggleSiteAudio = function() {
+            if (!siteAudioPlayer.paused) {
+                userPausedManually = true;
+                siteAudioPlayer.pause();
+                updateAudioUI(false);
+                showToast('Música pausada');
+            } else {
+                userPausedManually = false;
+                siteAudioPlayer.play().then(() => {
+                    updateAudioUI(true, 'Tocando');
+                    showToast('Música despausada');
+                }).catch(() => {
+                    updateAudioUI(false, `Coloque "${HUB_DATA.siteAudio.audioFile}" na pasta do index.html`);
+                    showToast(`Coloque "${HUB_DATA.siteAudio.audioFile}" na mesma pasta do index.html`);
+                });
+            }
+        };
+
+        siteAudioPlayer.addEventListener('play', () => updateAudioUI(true));
+        siteAudioPlayer.addEventListener('pause', () => updateAudioUI(false));
+        siteAudioPlayer.addEventListener('error', () => {
+            updateAudioUI(false, `Arquivo "${HUB_DATA.siteAudio.audioFile}" não encontrado na pasta`);
+        });
+
+        function loadPrefs() {
+            try {
+                const raw = localStorage.getItem(PREFS_KEY);
+                const parsed = raw ? JSON.parse(raw) : {};
+                if (parsed.gtaTheme === 'male') parsed.gtaTheme = 'jason';
+                if (parsed.gtaTheme === 'female') parsed.gtaTheme = 'lucia';
+                return { ...DEFAULT_PREFS, ...parsed };
+            } catch (e) {
+                return { ...DEFAULT_PREFS };
+            }
+        }
+
+        function persistPrefs() {
+            try {
+                localStorage.setItem(PREFS_KEY, JSON.stringify(savedPrefs));
+            } catch (e) {}
+        }
+
+        function hexToRgbTuple(hex) {
+            const clean = (hex || '#3b82f6').replace('#', '');
+            const full = clean.length === 3
+                ? clean.split('').map(c => c + c).join('')
+                : clean.padEnd(6, '0').slice(0, 6);
+            const num = parseInt(full, 16);
+            return `${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}`;
+        }
+
+        // ==========================================
+        // 3. APPLY THEME, COLOR & WALLPAPER
+        // ==========================================
+        function applyVisualPrefs(prefsObj) {
+            const root = document.documentElement;
+            const body = document.body;
+            const wallpaper = document.getElementById('gtaWallpaperLayer');
+
+            if (prefsObj.mode === 'light') {
+                root.classList.remove('dark');
+                body.classList.add('light-theme');
+            } else {
+                root.classList.add('dark');
+                body.classList.remove('light-theme');
+            }
+
+            const rgb = hexToRgbTuple(prefsObj.colorHex);
+            const secRgb = hexToRgbTuple(prefsObj.colorSec || '#8b5cf6');
+            root.style.setProperty('--accent-primary', prefsObj.colorHex);
+            root.style.setProperty('--accent-secondary', prefsObj.colorSec || '#8b5cf6');
+            root.style.setProperty('--accent-rgb', rgb);
+            root.style.setProperty('--accent-sec-rgb', secRgb);
+
+            if (GTA_THEMES[prefsObj.gtaTheme]) {
+                wallpaper.style.backgroundImage = `url("${encodeURI(GTA_THEMES[prefsObj.gtaTheme])}")`;
+                wallpaper.classList.add('active');
+            } else {
+                wallpaper.classList.remove('active');
+                wallpaper.style.backgroundImage = '';
+            }
+
+            const modeLabel = prefsObj.mode === 'light' ? 'Modo Claro' : 'Modo Escuro';
+            const gtaLabel = prefsObj.gtaTheme && prefsObj.gtaTheme !== 'none'
+                ? ` • ${prefsObj.gtaTheme}`
+                : '';
+            document.getElementById('activeStyleLabel').textContent = `${modeLabel} • ${prefsObj.colorName || 'Cor'}${gtaLabel}`;
+            document.getElementById('customColorPicker').value = prefsObj.colorHex;
+
+            updateModalSelectionStates(prefsObj);
+        }
+
+        function updateModalSelectionStates(prefsObj) {
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                const active = btn.dataset.mode === prefsObj.mode;
+                btn.classList.toggle('accent-btn', active);
+                btn.classList.toggle('text-white', active);
+                btn.classList.toggle('border-transparent', active);
+            });
+
+            document.querySelectorAll('.gta-card').forEach(card => {
+                const active = card.dataset.gta === prefsObj.gtaTheme;
+                card.style.borderColor = active ? prefsObj.colorHex : '';
+                card.style.boxShadow = active ? `0 0 0 1px ${prefsObj.colorHex}` : '';
+            });
+        }
+
+        // ==========================================
+        // 4. RENDER PUBLIC HUB UI
+        // ==========================================
+        function getSocialSvg(platform) {
+            const icons = {
+                youtube: `<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`,
+                instagram: `<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>`,
+                tiktok: `<svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>`
+            };
+            return icons[platform] || `<i data-lucide="link" class="w-4 h-4"></i>`;
+        }
+
+        function renderLinkIcon(link) {
+            if (link.icon === 'youtube') {
+                return `<svg class="w-5 h-5 fill-current ${link.iconColor}" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`;
+            }
+            return `<i data-lucide="${link.icon}" class="w-5 h-5 ${link.iconColor}"></i>`;
+        }
+
+        function renderHub() {
+            document.getElementById('profileName').textContent = HUB_DATA.profile.name;
+            document.getElementById('profileBio').textContent = HUB_DATA.profile.bio;
+            document.getElementById('profileAvatar').src = HUB_DATA.profile.avatar;
+
+            document.getElementById('featuredLink').href = HUB_DATA.profile.featuredUrl;
+            document.getElementById('featuredThumb').src = HUB_DATA.profile.featuredThumb;
+            document.getElementById('featuredSubtitle').textContent = HUB_DATA.profile.featuredSub;
+            document.getElementById('featuredTitle').textContent = HUB_DATA.profile.featuredTitle;
+            document.getElementById('liveBadgeText').textContent = HUB_DATA.profile.liveBadge;
+
+            document.getElementById('trackTitleText').textContent = HUB_DATA.siteAudio.title;
+            document.getElementById('trackHintText').textContent = `Arquivo: ${HUB_DATA.siteAudio.audioFile}`;
+            document.getElementById('trackCover').src = HUB_DATA.siteAudio.cover;
+
+            const socialBar = document.getElementById('socialBar');
+            socialBar.innerHTML = HUB_DATA.socials.map(soc => `
+                <a href="${soc.url}" target="_blank" rel="noopener noreferrer"
+                   class="glass-card px-3.5 py-2 rounded-full flex items-center gap-2 text-xs font-semibold active:scale-95">
+                    <span class="${soc.color}">${getSocialSvg(soc.platform)}</span>
+                    <span>${soc.label}</span>
+                </a>
+            `).join('');
+
+            const linksGrid = document.getElementById('linksGrid');
+            linksGrid.innerHTML = HUB_DATA.links.map(link => {
+                const isExternal = link.url.startsWith('http');
+                return `
+                    <a href="${link.url}" ${isExternal ? 'target="_blank" rel="noopener noreferrer"' : ''}
+                       class="glass-card p-4 rounded-2xl flex items-center gap-3.5 group relative overflow-hidden ${link.featured ? 'sm:col-span-2 accent-border' : ''}">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br ${link.accent} border flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110">
+                            ${renderLinkIcon(link)}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2">
+                                <h4 class="font-display font-bold text-sm sm:text-base truncate">
+                                    ${link.title}
+                                </h4>
+                                ${link.badge ? `<span class="px-2 py-0.5 text-[10px] font-bold uppercase rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 shrink-0">${link.badge}</span>` : ''}
+                            </div>
+                            <p class="text-xs opacity-70 truncate mt-0.5">${link.subtitle}</p>
+                        </div>
+                        <div class="p-2 rounded-xl bg-white/5 opacity-75 group-hover:opacity-100 transition-colors shrink-0">
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </div>
+                    </a>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        // ==========================================
+        // 5. CUSTOMIZATION MODAL EVENTS (SAVE ONLY ON CLICK)
+        // ==========================================
+        const customModal = document.getElementById('customModal');
+
+        function closeModalWithoutSaving() {
+            draftPrefs = { ...savedPrefs };
+            applyVisualPrefs(savedPrefs);
+            customModal.classList.add('hidden');
+            customModal.classList.remove('flex');
+            showToast('Alterações descartadas');
+        }
+
+        function initCustomControls() {
+            const swatchesContainer = document.getElementById('colorSwatches');
+            swatchesContainer.innerHTML = COLOR_PRESETS.map(preset => `
+                <button type="button" data-hex="${preset.hex}" data-sec="${preset.sec}" data-name="${preset.name}"
+                        class="swatch-btn p-2 rounded-xl border border-white/10 flex flex-col items-center gap-1.5 hover:scale-105 transition-transform">
+                    <span class="w-6 h-6 rounded-full shadow" style="background-color: ${preset.hex};"></span>
+                    <span class="text-[10px] font-semibold truncate w-full text-center">${preset.name.split(' ')[0]}</span>
+                </button>
+            `).join('');
+
+            document.querySelectorAll('.swatch-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    draftPrefs.colorHex = btn.dataset.hex;
+                    draftPrefs.colorSec = btn.dataset.sec;
+                    draftPrefs.colorName = btn.dataset.name;
+                    applyVisualPrefs(draftPrefs);
+                });
+            });
+
+            document.getElementById('customColorPicker').addEventListener('input', (e) => {
+                draftPrefs.colorHex = e.target.value;
+                draftPrefs.colorName = 'Personalizada';
+                applyVisualPrefs(draftPrefs);
+            });
+
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    draftPrefs.mode = btn.dataset.mode;
+                    applyVisualPrefs(draftPrefs);
+                });
+            });
+
+            document.querySelectorAll('.gta-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    draftPrefs.gtaTheme = card.dataset.gta;
+                    applyVisualPrefs(draftPrefs);
+                });
+            });
+        }
+
+        document.getElementById('openCustomBtn').addEventListener('click', () => {
+            draftPrefs = { ...savedPrefs };
+            applyVisualPrefs(draftPrefs);
+            customModal.classList.remove('hidden');
+            customModal.classList.add('flex');
+        });
+
+        document.getElementById('closeCustomBtn').addEventListener('click', () => {
+            closeModalWithoutSaving();
+        });
+
+        customModal.addEventListener('click', (e) => {
+            if (e.target === customModal) {
+                closeModalWithoutSaving();
+            }
+        });
+
+        document.getElementById('doneCustomBtn').addEventListener('click', () => {
+            savedPrefs = { ...draftPrefs };
+            persistPrefs();
+            applyVisualPrefs(savedPrefs);
+            customModal.classList.add('hidden');
+            customModal.classList.remove('flex');
+            showToast('Tema e cor salvos!');
+        });
+
+        document.getElementById('resetThemeBtn').addEventListener('click', () => {
+            draftPrefs = { ...DEFAULT_PREFS };
+            savedPrefs = { ...DEFAULT_PREFS };
+            persistPrefs();
+            applyVisualPrefs(savedPrefs);
+            showToast('Aparência padrão restaurada e salva!');
+        });
+
+        // ==========================================
+        // 6. TOAST, CLOCK & INITIALIZE
+        // ==========================================
+        let toastTimeout = null;
+        function showToast(msg) {
+            const box = document.getElementById('toastBox');
+            document.getElementById('toastMessage').textContent = msg;
+            box.classList.remove('opacity-0', 'translate-y-4');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                box.classList.add('opacity-0', 'translate-y-4');
+            }, 2800);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            updateLiveClock();
+            setInterval(updateLiveClock, 1000);
+            initCustomControls();
+            applyVisualPrefs(savedPrefs);
+            renderHub();
+            attemptAutoplay();
+
+            document.addEventListener('click', unlockOnFirstInteraction);
+            document.addEventListener('touchstart', unlockOnFirstInteraction);
+            document.addEventListener('keydown', unlockOnFirstInteraction);
+        });
+    </script>
+</body>
+</html>
